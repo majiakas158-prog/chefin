@@ -108,7 +108,7 @@ export function SignInPage() {
             />
             Remember Me
           </label>
-          <Link className="text-brand-500 hover:underline" to="/signin">
+          <Link className="text-brand-500 hover:underline" to="/forgot-password">
             Forgot Password?
           </Link>
         </div>

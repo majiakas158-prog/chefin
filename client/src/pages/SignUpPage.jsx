@@ -78,10 +78,7 @@ export function SignUpPage() {
 
     setUser(data.user);
     localStorage.setItem('selectedRole', role);
-    navigate(
-      role === 'restaurant' ? '/restaurant-dashboard' : '/chef-dashboard',
-      { replace: true },
-    );
+    navigate('/verify-email', { replace: true });
   };
 
   return (

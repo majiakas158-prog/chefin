@@ -5,16 +5,24 @@ import { DashboardPage } from '../pages/DashboardPage';
 import { LandingPage } from '../pages/LandingPage';
 import { SignInPage } from '../pages/SignInPage';
 import { SignUpPage } from '../pages/SignUpPage';
+import { VerifyEmailPage } from '../pages/VerifyEmailPage';
+import { ForgotPasswordPage } from '../pages/ForgotPasswordPage';
+import { ResetPasswordPage } from '../pages/ResetPasswordPage';
 
 export default function App() {
   return (
-    // BrowserRouter must wrap AuthProvider so useNavigate works inside it
     <BrowserRouter>
       <AuthProvider>
         <Routes>
+          {/* Public routes */}
           <Route path="/" element={<LandingPage />} />
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/verify-email" element={<VerifyEmailPage />} />
+          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+          {/* Protected routes — require auth + email verified */}
           <Route
             path="/chef-dashboard"
             element={
@@ -31,6 +39,7 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AuthProvider>

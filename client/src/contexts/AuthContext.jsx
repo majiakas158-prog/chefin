@@ -5,30 +5,31 @@ import { authClient } from '../lib/authClient';
 const AuthContext = createContext(null);
 
 /**
- * Provides `user`, `loading`, and `signOut()` to the whole app.
+ * Provides auth state and helpers to the whole app:
  *
- * - `user`    : the better-auth session user object, or null if not signed in
- * - `loading` : true while the initial session fetch is in progress
- * - `signOut` : signs out via better-auth and redirects to /signin
+ * - `user`                : better-auth session user object, or null
+ * - `loading`             : true while the initial session fetch is in flight
+ * - `setUser`             : manually update the cached user (after sign-in/up)
+ * - `signOut()`           : signs out and redirects to /signin
+ * - `resendVerification(email)` : resend the verification email
+ * - `forgotPassword(email)`     : send a password-reset email
  */
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  // Fetch the session once on mount
+  // Hydrate session on mount
   useEffect(() => {
     let cancelled = false;
-
-    authClient.getSession().then(({ data }) => {
-      if (!cancelled) {
-        setUser(data?.user ?? null);
-        setLoading(false);
-      }
-    }).catch(() => {
-      if (!cancelled) setLoading(false);
-    });
-
+    authClient.getSession()
+      .then(({ data }) => {
+        if (!cancelled) {
+          setUser(data?.user ?? null);
+          setLoading(false);
+        }
+      })
+      .catch(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
   }, []);
 
@@ -38,8 +39,23 @@ export function AuthProvider({ children }) {
     navigate('/signin', { replace: true });
   }, [navigate]);
 
+  const resendVerification = useCallback(async (email) => {
+    const { error } = await authClient.sendVerificationEmail({ email, callbackURL: '/signin' });
+    return error ?? null;
+  }, []);
+
+  const forgotPassword = useCallback(async (email) => {
+    const { error } = await authClient.forgetPassword({
+      email,
+      redirectTo: '/reset-password',
+    });
+    return error ?? null;
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, loading, setUser, signOut }}>
+    <AuthContext.Provider
+      value={{ user, loading, setUser, signOut, resendVerification, forgotPassword }}
+    >
       {children}
     </AuthContext.Provider>
   );

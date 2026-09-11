@@ -2,8 +2,9 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 /**
- * Wraps a route and redirects unauthenticated users to /signin.
- * Shows a centered spinner while the session is loading.
+ * Wraps a route with two guards:
+ *  1. Not signed in         → /signin
+ *  2. Email not verified    → /verify-email
  */
 export function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -16,9 +17,9 @@ export function ProtectedRoute({ children }) {
     );
   }
 
-  if (!user) {
-    return <Navigate to="/signin" replace />;
-  }
+  if (!user) return <Navigate to="/signin" replace />;
+
+  if (!user.emailVerified) return <Navigate to="/verify-email" replace />;
 
   return children;
 }
