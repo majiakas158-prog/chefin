@@ -1,0 +1,3 @@
+import { useState } from 'react';
+import { inputClass } from './FormField';
+export function PasswordInput({value,setValue,placeholder}) { const [visible,setVisible]=useState(false); return <div className="relative"><input className={`${inputClass} pr-12`} type={visible?'text':'password'} value={value} onChange={e=>setValue(e.target.value)} placeholder={placeholder} required/><button className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-brand-500" type="button" aria-label={visible?'Hide password':'Show password'} onClick={()=>setVisible(!visible)}>{visible?'◉':'○'}</button></div>; }
