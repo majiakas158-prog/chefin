@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CheafIn | Sign In</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/signin.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- Left Side -->
+    <div class="left">
+
+        <img src="images/logo.png" class="logo" alt="Logo">
+
+        <h1>CheafIn</h1>
+
+        <p class="tagline">
+            Connecting Restaurants with Professional Chefs
+        </p>
+
+        <img src="images/background.jpg"
+             class="illustration"
+             alt="Chef">
+
+    </div>
+
+    <!-- Right Side -->
+    <div class="right">
+
+        <div class="login-box">
+
+            <h2>Welcome Back 👋</h2>
+
+            <p>
+                Sign in to continue using CheafIn.
+            </p>
+
+            <!-- Role Selection -->
+
+            <h4>Select Your Role</h4>
+
+            <div class="role-selection">
+
+                <button
+                    class="role-btn active"
+                    id="chefRole">
+
+                    👨‍🍳 Chef
+
+                </button>
+
+                <button
+                    class="role-btn"
+                    id="restaurantRole">
+
+                    🏢 Restaurant
+
+                </button>
+
+            </div>
+
+            <!-- Login Form -->
+
+            <form id="loginForm">
+
+                <!-- Email -->
+
+                <div class="input-group">
+
+                    <label>Email Address</label>
+
+                    <input
+                        type="email"
+                        id="email"
+                        placeholder="Enter your email"
+                        required>
+
+                </div>
+
+                <!-- Password -->
+
+                <div class="input-group">
+
+                    <label>Password</label>
+
+                    <div class="password-box">
+
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Enter your password"
+                            required>
+
+                        <i class="fa-solid fa-eye" id="togglePassword"></i>
+
+                    </div>
+
+                </div>
+
+                <!-- Remember -->
+
+                <div class="options">
+
+                    <label>
+
+                        <input type="checkbox" id="remember">
+
+                        Remember Me
+
+                    </label>
+
+                    <a href="#">
+
+                        Forgot Password?
+
+                    </a>
+
+                </div>
+
+                <!-- Sign In -->
+
+                <button
+                    type="submit"
+                    class="signin-btn">
+
+                    Sign In
+
+                </button>
+
+            </form>
+
+            <!-- Divider -->
+
+            <div class="divider">
+
+                <span>OR</span>
+
+            </div>
+
+            <!-- Google -->
+
+            <button class="google-btn">
+
+                <i class="fa-brands fa-google"></i>
+
+                Continue with Google
+
+            </button>
+
+            <!-- Bottom -->
+
+            <div class="bottom">
+
+                Don't have an account?
+
+                <a href="signup.html">
+
+                    Create Account
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="js/signin.js"></script>
+
+</body>
+
+</html>
