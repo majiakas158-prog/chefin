@@ -10,7 +10,10 @@ const schema = z.object({
   FRONTEND_URL:       z.string().url(),
   // Resend — optional in dev (emails printed to console), required in prod
   RESEND_API_KEY:     z.string().optional(),
-  RESEND_FROM:        z.string().optional(), // e.g. "CheafIn <noreply@yourdomain.com>"
+  RESEND_FROM:        z.string().optional(),
+  // Google OAuth — optional, enables "Continue with Google"
+  GOOGLE_CLIENT_ID:     z.string().optional(),
+  GOOGLE_CLIENT_SECRET: z.string().optional(),
 });
 
 export const env = schema.parse(process.env);

@@ -8,6 +8,7 @@ import { SignUpPage } from '../pages/SignUpPage';
 import { VerifyEmailPage } from '../pages/VerifyEmailPage';
 import { ForgotPasswordPage } from '../pages/ForgotPasswordPage';
 import { ResetPasswordPage } from '../pages/ResetPasswordPage';
+import { CompleteProfilePage } from '../pages/CompleteProfilePage';
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route path="/complete-profile" element={<CompleteProfilePage />} />
 
           {/* Protected routes — require auth + email verified */}
           <Route

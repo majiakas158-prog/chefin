@@ -13,9 +13,8 @@ export const auth = betterAuth({
   // ── Email + password ───────────────────────────────────────────────────
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: true,       // block sign-in until email verified
+    requireEmailVerification: true,
 
-    // ── Password reset ─────────────────────────────────────────────────
     sendResetPassword: async ({ user, url }) => {
       await sendEmail({
         to: user.email,
@@ -32,8 +31,8 @@ export const auth = betterAuth({
 
   // ── Email verification ─────────────────────────────────────────────────
   emailVerification: {
-    sendOnSignUp: true,                   // send immediately after sign-up
-    autoSignInAfterVerification: true,    // sign the user in after they click the link
+    sendOnSignUp: true,
+    autoSignInAfterVerification: true,
 
     sendVerificationEmail: async ({ user, url }) => {
       await sendEmail({
@@ -49,9 +48,26 @@ export const auth = betterAuth({
     },
   },
 
+  // ── Google OAuth ───────────────────────────────────────────────────────
+  // Only enabled when GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET are set.
+  // Google users have emailVerified=true automatically (Google already did it).
+  // After OAuth they land on /complete-profile to pick their chef/restaurant role.
+  ...(env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET
+    ? {
+        socialProviders: {
+          google: {
+            clientId:     env.GOOGLE_CLIENT_ID,
+            clientSecret: env.GOOGLE_CLIENT_SECRET,
+          },
+        },
+      }
+    : {}),
+
   // ── Database hooks ────────────────────────────────────────────────────
-  // After better-auth creates a user, auto-create their Profile row.
-  // The client encodes role + profile fields as JSON in the name field.
+  // Auto-create a Profile row after every sign-up (email or Google).
+  // For email sign-ups: name field is JSON with role + profile fields.
+  // For Google sign-ups: name is a plain string → default role='chef',
+  //   user updates it on /complete-profile.
   databaseHooks: {
     user: {
       create: {
@@ -67,7 +83,7 @@ export const auth = betterAuth({
               delete profileData.name;
             }
           } catch {
-            // plain string name — no metadata
+            // plain string name (Google OAuth) — use defaults
           }
 
           await prisma.user.update({
