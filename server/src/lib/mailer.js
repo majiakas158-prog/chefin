@@ -1,33 +1,20 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import { env } from '../config/env.js';
 
 /**
- * In development: prints the email to the server console (no real sending).
- * In production:  sends via SMTP using env vars SMTP_HOST / SMTP_PORT /
- *                 SMTP_USER / SMTP_PASS / SMTP_FROM.
+ * Email delivery via Resend (https://resend.com).
+ *
+ * In development (no RESEND_API_KEY set): emails are printed to the server
+ * console — zero config needed for local dev.
+ *
+ * In production: set RESEND_API_KEY in your .env file.
  */
-function createTransport() {
-  if (env.NODE_ENV !== 'production') {
-    // Console-only transport — zero config needed for local dev
-    return null;
-  }
-  return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT ?? 587),
-    secure: process.env.SMTP_PORT === '465',
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
-  });
-}
-
-const transport = createTransport();
-const FROM = process.env.SMTP_FROM ?? 'CheafIn <noreply@cheafin.com>';
+const resend = env.RESEND_API_KEY ? new Resend(env.RESEND_API_KEY) : null;
+const FROM = env.RESEND_FROM ?? 'CheafIn <onboarding@resend.dev>';
 
 export async function sendEmail({ to, subject, html }) {
-  if (env.NODE_ENV !== 'production') {
-    // Extract the first href from the html so it's easy to copy in dev
+  // ── Development fallback ──────────────────────────────────────────────
+  if (!resend) {
     const link = html.match(/href="([^"]+)"/)?.[1];
     console.log('\n📧 ─────────── DEV EMAIL ───────────');
     console.log(`   To:      ${to}`);
@@ -37,10 +24,15 @@ export async function sendEmail({ to, subject, html }) {
     return;
   }
 
-  await transport.sendMail({ from: FROM, to, subject, html });
+  // ── Production: send via Resend ───────────────────────────────────────
+  const { error } = await resend.emails.send({ from: FROM, to, subject, html });
+  if (error) {
+    console.error('[Resend] Failed to send email:', error);
+    throw new Error(error.message);
+  }
 }
 
-/** Reusable HTML wrapper for all transactional emails */
+/** Reusable branded HTML wrapper for transactional emails */
 export function emailTemplate({ heading, body, ctaLabel, ctaUrl }) {
   return `
 <!DOCTYPE html>

@@ -8,12 +8,9 @@ const schema = z.object({
   BETTER_AUTH_SECRET: z.string().min(32),
   BETTER_AUTH_URL:    z.string().url(),
   FRONTEND_URL:       z.string().url(),
-  // Optional — only required in production for real email delivery
-  SMTP_HOST:          z.string().optional(),
-  SMTP_PORT:          z.coerce.number().optional(),
-  SMTP_USER:          z.string().optional(),
-  SMTP_PASS:          z.string().optional(),
-  SMTP_FROM:          z.string().optional(),
+  // Resend — optional in dev (emails printed to console), required in prod
+  RESEND_API_KEY:     z.string().optional(),
+  RESEND_FROM:        z.string().optional(), // e.g. "CheafIn <noreply@yourdomain.com>"
 });
 
 export const env = schema.parse(process.env);
