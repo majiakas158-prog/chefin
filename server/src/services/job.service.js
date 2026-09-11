@@ -1,0 +1,7 @@
+import { prisma } from '../lib/prisma.js';
+const jobSelect={id:true,title:true,cuisine:true,location:true,salary:true,status:true,createdAt:true,postedBy:{select:{id:true,name:true,profile:{select:{restaurantName:true,city:true}}}},_count:{select:{applications:true}}};
+export const listJobs=()=>prisma.job.findMany({where:{status:'ACTIVE'},select:jobSelect,orderBy:{createdAt:'desc'}});
+export const createJob=(userId,data)=>prisma.job.create({data:{...data,postedById:userId},select:jobSelect});
+export const applyToJob=(chefId,jobId)=>prisma.application.create({data:{chefId,jobId},include:{job:{select:jobSelect}}});
+export async function dashboard(userId){const profile=await getProfile(userId);if(!profile)throw Object.assign(new Error('Complete your profile first.'),{statusCode:400,code:'PROFILE_REQUIRED'});if(profile.role==='restaurant'){const jobs=await prisma.job.findMany({where:{postedById:userId},select:jobSelect});const applications=await prisma.application.count({where:{job:{postedById:userId}}});return {role:'restaurant',profile,jobs,stats:{activeJobs:jobs.filter(j=>j.status==='ACTIVE').length,applications}}}const [applications,jobs]=await Promise.all([prisma.application.count({where:{chefId:userId}}),listJobs()]);return {role:'chef',profile,jobs,stats:{appliedJobs:applications}}}
+async function getProfile(userId){return prisma.profile.findUnique({where:{userId},include:{user:{select:{id:true,name:true,email:true}}}})}

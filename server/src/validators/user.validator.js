@@ -1,0 +1,2 @@
+import { z } from 'zod';
+export const updateProfileSchema=z.object({role:z.enum(['chef','restaurant']).optional(),phone:z.string().min(6).max(30).optional(),experience:z.coerce.number().int().min(0).max(70).optional(),specialization:z.string().max(100).optional(),preferredLocation:z.string().max(100).optional(),restaurantName:z.string().max(100).optional(),restaurantAddress:z.string().max(300).optional(),city:z.string().max(100).optional()}).refine(data=>Object.keys(data).length>0,'At least one profile field is required.');
