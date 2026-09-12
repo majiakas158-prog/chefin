@@ -25,16 +25,16 @@ export function SignInPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [otp, setOtp] = useState('');
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpLoading, setOtpLoading] = useState(false);
 
   const setRole = (value) => {
     setRoleState(value);
     localStorage.setItem('selectedRole', value);
   };
 
-  const submit = async (event) => {
-    event.preventDefault();
-    setError('');
-    setLoading(true);
+  const saveRememberedEmail = () => {
 
     if (remember) {
       localStorage.setItem('rememberEmail', email);
@@ -42,21 +42,11 @@ export function SignInPage() {
       localStorage.removeItem('rememberEmail');
     }
 
-    const { data, error: authError } = await authClient.signIn.email({
-      email,
-      password,
-    });
+  };
 
-    if (authError) {
-      setError(authError.message || 'Invalid email or password.');
-      setLoading(false);
-      return;
-    }
+  const goToDashboard = async (user) => {
+    setUser(user);
 
-    // Hydrate auth context with the signed-in user
-    setUser(data.user);
-
-    // Determine dashboard from the user's profile role
     let profileRole = role;
     try {
       const res = await userApi.getMe();
@@ -71,6 +61,52 @@ export function SignInPage() {
     );
   };
 
+  const submit = async (event) => {
+    event.preventDefault();
+    setError('');
+    setLoading(true);
+    saveRememberedEmail();
+
+    const { data, error: authError } = await authClient.signIn.email({ email, password });
+
+    if (authError) {
+      setError(authError.message || 'Invalid email or password.');
+      setLoading(false);
+      return;
+    }
+
+    await goToDashboard(data.user);
+  };
+
+  const sendOtp = async () => {
+    setError('');
+    setOtpLoading(true);
+    saveRememberedEmail();
+    const { error: otpError } = await authClient.emailOtp.sendVerificationOtp({
+      email,
+      type: 'sign-in',
+    });
+    setOtpLoading(false);
+    if (otpError) {
+      setError(otpError.message || 'We could not send a sign-in code.');
+      return;
+    }
+    setOtpSent(true);
+  };
+
+  const verifyOtp = async (event) => {
+    event.preventDefault();
+    setError('');
+    setOtpLoading(true);
+    const { data, error: otpError } = await authClient.signIn.emailOtp({ email, otp });
+    if (otpError) {
+      setError(otpError.message || 'That code is invalid or has expired.');
+      setOtpLoading(false);
+      return;
+    }
+    await goToDashboard(data.user);
+  };
+
   const signInWithGoogle = async () => {
     setGoogleLoading(true);
     await authClient.signIn.social({
@@ -83,9 +119,9 @@ export function SignInPage() {
   return (
     <AuthLayout>
       <h2 className="text-3xl font-bold">Welcome Back 👋</h2>
-      <p className="mt-2 text-slate-500">Sign in to continue using CheafIn.</p>
+      <p className="mt-2 text-slate-500">Continue your culinary journey from where you left off.</p>
 
-      <h4 className="mt-7 font-semibold">Select Your Role</h4>
+      <h4 className="mt-7 text-sm font-semibold text-slate-700">I&apos;m signing in as a</h4>
       <RolePicker role={role} setRole={setRole} />
 
       <form onSubmit={submit}>
@@ -130,12 +166,49 @@ export function SignInPage() {
         )}
 
         <button
-          className="w-full rounded-xl bg-brand-500 py-3.5 font-semibold text-white transition hover:bg-brand-600 disabled:opacity-60"
+          className="w-full rounded-xl bg-brand-500 py-3.5 font-semibold text-white shadow-lg shadow-orange-200 transition hover:bg-brand-600 disabled:opacity-60"
           disabled={loading}
         >
           {loading ? 'Signing in…' : 'Sign In'}
         </button>
       </form>
+
+      <div className="my-6 flex items-center gap-3">
+        <div className="h-px flex-1 bg-slate-200" />
+        <span className="text-xs font-medium text-slate-400">OR CONTINUE WITH</span>
+        <div className="h-px flex-1 bg-slate-200" />
+      </div>
+
+      {!otpSent ? (
+        <button
+          type="button"
+          onClick={sendOtp}
+          disabled={otpLoading || loading || !email}
+          className="w-full rounded-xl border border-brand-500 py-3.5 font-semibold text-brand-600 transition hover:bg-brand-50 disabled:opacity-60"
+        >
+          {otpLoading ? 'Sending code…' : 'Sign In with Email Code'}
+        </button>
+      ) : (
+        <form onSubmit={verifyOtp} className="rounded-xl border border-slate-200 p-4">
+          <p className="mb-3 text-sm text-slate-600">Enter the six-digit code sent to {email}.</p>
+          <input
+            className={`${inputClass} mb-3 text-center tracking-[0.35em]`}
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            maxLength={6}
+            value={otp}
+            onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+            placeholder="123456"
+            required
+          />
+          <button
+            className="w-full rounded-xl bg-brand-500 py-3.5 font-semibold text-white transition hover:bg-brand-600 disabled:opacity-60"
+            disabled={otpLoading || otp.length !== 6}
+          >
+            {otpLoading ? 'Verifying…' : 'Verify Code'}
+          </button>
+        </form>
+      )}
 
       <div className="my-6 flex items-center gap-3">
         <div className="h-px flex-1 bg-slate-200" />
@@ -171,4 +244,3 @@ export function SignInPage() {
     </AuthLayout>
   );
 }
-

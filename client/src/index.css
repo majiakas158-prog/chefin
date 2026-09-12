@@ -1,4 +1,4 @@
 @import "tailwindcss";
 
 @theme { --color-brand-50:#fff7f2; --color-brand-100:#ffe6db; --color-brand-500:#ff6b35; --color-brand-600:#e85a27; --font-sans:"Poppins",ui-sans-serif,system-ui,sans-serif; }
-@layer base { body { @apply m-0 min-w-80 bg-slate-50 font-sans text-slate-800; } button,input,textarea { font:inherit; } }
+@layer base { html { scroll-behavior:smooth; } body { @apply m-0 min-w-80 bg-slate-50 font-sans text-slate-800; } button,input,textarea,select { font:inherit; } button { cursor:pointer; } button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible { outline:3px solid #ffb703; outline-offset:2px; } }

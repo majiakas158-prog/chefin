@@ -1,4 +1,5 @@
 import { createAuthClient } from 'better-auth/client';
+import { emailOTPClient } from 'better-auth/client/plugins';
 
 /**
  * better-auth browser client.
@@ -11,4 +12,5 @@ const base = import.meta.env.VITE_API_URL ?? window.location.origin;
 
 export const authClient = createAuthClient({
   baseURL: `${base}/api/auth`,
+  plugins: [emailOTPClient()],
 });

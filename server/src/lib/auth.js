@@ -1,5 +1,6 @@
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from '@better-auth/prisma-adapter';
+import { emailOTP } from 'better-auth/plugins';
 import { env } from '../config/env.js';
 import { prisma } from './prisma.js';
 import { sendEmail, emailTemplate } from './mailer.js';
@@ -9,6 +10,27 @@ export const auth = betterAuth({
   secret: env.BETTER_AUTH_SECRET,
   trustedOrigins: [env.FRONTEND_URL],
   database: prismaAdapter(prisma, { provider: 'sqlite' }),
+  plugins: [
+    emailOTP({
+      // Existing accounts only: an OTP must never create an unprofiled user.
+      disableSignUp: true,
+      expiresIn: 300,
+      otpLength: 6,
+      allowedAttempts: 3,
+      storeOTP: 'hashed',
+      sendVerificationOTP: async ({ email, otp, type }) => {
+        if (type !== 'sign-in') return;
+        await sendEmail({
+          to: email,
+          subject: 'Your CheafIn sign-in code',
+          html: emailTemplate({
+            heading: 'Your sign-in code',
+            body: `Use this code to sign in: <strong style="font-size:28px;letter-spacing:6px">${otp}</strong><br><br>This code expires in 5 minutes.`,
+          }),
+        });
+      },
+    }),
+  ],
 
   // ── Email + password ───────────────────────────────────────────────────
   emailAndPassword: {
@@ -99,4 +121,3 @@ export const auth = betterAuth({
     },
   },
 });
-

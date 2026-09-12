@@ -11,7 +11,7 @@ export function SignUpPage() {
   const navigate = useNavigate();
   const { setUser } = useAuth();
 
-  const [role, setRole] = useState('chef');
+  const [role, setRole] = useState(() => localStorage.getItem('selectedRole') || 'chef');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [error, setError] = useState('');
@@ -84,10 +84,11 @@ export function SignUpPage() {
 
   return (
     <AuthLayout>
-      <h2 className="text-3xl font-bold">Create Account</h2>
-      <p className="mt-2 text-slate-500">Join CheafIn and start your journey today.</p>
+      <p className="text-sm font-semibold text-brand-600">JOIN CHEAFIN</p>
+      <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">Create your account</h2>
+      <p className="mt-2 text-slate-500">Set up your profile and start making the right connections.</p>
 
-      <h4 className="mt-7 font-semibold">Select Your Role</h4>
+      <h4 className="mt-7 text-sm font-semibold text-slate-700">First, tell us who you are</h4>
       <RolePicker role={role} setRole={setRole} />
 
       <form onSubmit={submit}>
@@ -191,7 +192,7 @@ export function SignUpPage() {
         )}
 
         <button
-          className="w-full rounded-xl bg-brand-500 py-3.5 font-semibold text-white transition hover:bg-brand-600 disabled:opacity-60"
+          className="w-full rounded-xl bg-brand-500 py-3.5 font-semibold text-white shadow-lg shadow-orange-200 transition hover:bg-brand-600 disabled:opacity-60"
           disabled={loading}
         >
           {loading ? 'Creating account…' : 'Create Account'}
@@ -200,7 +201,7 @@ export function SignUpPage() {
 
       <div className="my-6 flex items-center gap-3">
         <div className="h-px flex-1 bg-slate-200" />
-        <span className="text-xs text-slate-400">OR</span>
+        <span className="text-xs font-medium text-slate-400">OR CONTINUE WITH</span>
         <div className="h-px flex-1 bg-slate-200" />
       </div>
 

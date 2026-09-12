@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 import { env } from '../config/env.js';
 
 /**
@@ -10,11 +11,30 @@ import { env } from '../config/env.js';
  * In production: set RESEND_API_KEY in your .env file.
  */
 const resend = env.RESEND_API_KEY ? new Resend(env.RESEND_API_KEY) : null;
-const FROM = env.RESEND_FROM ?? 'CheafIn <onboarding@resend.dev>';
+const gmail = env.GMAIL_USER && env.GMAIL_APP_PASSWORD
+  ? nodemailer.createTransport({
+      service: 'gmail',
+      auth: { user: env.GMAIL_USER, pass: env.GMAIL_APP_PASSWORD },
+    })
+  : null;
+const FROM = env.GMAIL_FROM ?? env.RESEND_FROM ?? 'CheafIn <onboarding@resend.dev>';
 
 export async function sendEmail({ to, subject, html }) {
+  // Gmail is deliberately preferred when configured. Gmail requires an App
+  // Password (with 2-Step Verification enabled), not the account password.
+  if (gmail) {
+    const result = await gmail.sendMail({ from: FROM, to, subject, html });
+    if (!result.accepted.includes(to)) {
+      throw new Error(`Gmail did not accept delivery to ${to}`);
+    }
+    return;
+  }
+
   // ── Development fallback ──────────────────────────────────────────────
   if (!resend) {
+    if (env.NODE_ENV === 'production') {
+      throw new Error('Email is not configured. Set GMAIL_USER and GMAIL_APP_PASSWORD.');
+    }
     const link = html.match(/href="([^"]+)"/)?.[1];
     console.log('\n📧 ─────────── DEV EMAIL ───────────');
     console.log(`   To:      ${to}`);
