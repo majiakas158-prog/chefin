@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AuthLayout } from '../components/auth/AuthLayout';
+import { getErrorMessage } from '../lib/errorMessage';
 import { PasswordInput } from '../components/auth/PasswordInput';
 import { FormField } from '../components/auth/FormField';
 import { authClient } from '../lib/authClient';
@@ -40,7 +41,7 @@ export function ResetPasswordPage() {
     setLoading(true);
     const { error: authError } = await authClient.resetPassword({ newPassword: password, token });
     if (authError) {
-      setError(authError.message ?? 'Failed to reset password. The link may have expired.');
+      setError(getErrorMessage(authError, 'Failed to reset password. The link may have expired.'));
       setLoading(false);
       return;
     }
@@ -67,7 +68,7 @@ export function ResetPasswordPage() {
     <AuthLayout>
       <h2 className="text-3xl font-bold">Set new password</h2>
       <p className="mt-2 text-slate-500">
-        Choose a strong password for your CheafIn account.
+        Choose a strong password for your Chefin account.
       </p>
 
       <form onSubmit={submit} className="mt-7">

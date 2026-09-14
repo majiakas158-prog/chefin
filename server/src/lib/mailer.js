@@ -17,7 +17,7 @@ const gmail = env.GMAIL_USER && env.GMAIL_APP_PASSWORD
       auth: { user: env.GMAIL_USER, pass: env.GMAIL_APP_PASSWORD },
     })
   : null;
-const FROM = env.GMAIL_FROM ?? env.RESEND_FROM ?? 'CheafIn <onboarding@resend.dev>';
+const FROM = env.GMAIL_FROM ?? env.RESEND_FROM ?? 'Chefin <onboarding@resend.dev>';
 
 export async function sendEmail({ to, subject, html }) {
   // Gmail is deliberately preferred when configured. Gmail requires an App

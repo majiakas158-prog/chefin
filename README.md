@@ -1,4 +1,4 @@
-# 🍽️ CheafIn
+# 🍽️ Chefin
 
 > A job-board platform connecting **chefs** with **restaurants**.
 
@@ -18,7 +18,7 @@
 ## Project Structure
 
 ```
-cheafin/
+chefin/
 ├── client/              # React + Vite frontend (port 5173)
 │   └── src/
 │       ├── lib/api.js       # Axios instance + typed helpers

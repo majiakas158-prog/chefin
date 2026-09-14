@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 /**
- * Configured axios instance for the CheafIn API.
+ * Configured axios instance for the Chefin API.
  *
  * - In development, Vite proxies "/api" and "/api/auth" to localhost:4000,
  *   so baseURL is relative and CORS headers are handled automatically.

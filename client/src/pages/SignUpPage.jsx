@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthLayout } from '../components/auth/AuthLayout';
+import { getErrorMessage } from '../lib/errorMessage';
 import { FormField, inputClass } from '../components/auth/FormField';
 import { PasswordInput } from '../components/auth/PasswordInput';
 import { RolePicker } from '../components/auth/RolePicker';
@@ -72,7 +73,7 @@ export function SignUpPage() {
     });
 
     if (authError) {
-      setError(authError.message || 'Sign up failed. Please try again.');
+      setError(getErrorMessage(authError, 'Sign up failed. Please try again.'));
       setLoading(false);
       return;
     }
@@ -84,7 +85,7 @@ export function SignUpPage() {
 
   return (
     <AuthLayout>
-      <p className="text-sm font-semibold text-brand-600">JOIN CHEAFIN</p>
+      <p className="text-sm font-semibold text-brand-600">JOIN CHEFIN</p>
       <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">Create your account</h2>
       <p className="mt-2 text-slate-500">Set up your profile and start making the right connections.</p>
 

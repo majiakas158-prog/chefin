@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { AuthLayout } from '../components/auth/AuthLayout';
 import { FormField, inputClass } from '../components/auth/FormField';
 import { useAuth } from '../contexts/AuthContext';
+import { getErrorMessage } from '../lib/errorMessage';
 
 /**
  * Forgot password page — sends a password-reset email.
@@ -19,7 +20,7 @@ export function ForgotPasswordPage() {
     const error = await forgotPassword(email);
     if (error) {
       setStatus('error');
-      setMessage(error.message ?? 'Something went wrong. Please try again.');
+      setMessage(getErrorMessage(error));
     } else {
       setStatus('sent');
     }

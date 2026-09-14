@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthLayout } from '../components/auth/AuthLayout';
 import { useAuth } from '../contexts/AuthContext';
+import { getErrorMessage } from '../lib/errorMessage';
 
 /**
  * Shown after sign-up — tells the user to check their inbox.
@@ -21,7 +22,7 @@ export function VerifyEmailPage() {
     const error = await resendVerification(email);
     if (error) {
       setStatus('error');
-      setMessage(error.message ?? 'Something went wrong. Please try again.');
+      setMessage(getErrorMessage(error));
     } else {
       setStatus('sent');
       setMessage('Verification email sent! Check your inbox (and spam folder).');
@@ -43,7 +44,7 @@ export function VerifyEmailPage() {
       <p className="mt-2 text-slate-500">
         We sent a verification link to{' '}
         <span className="font-semibold text-slate-700">{email || 'your email address'}</span>.
-        <br />Click the link to activate your CheafIn account.
+        <br />Click the link to activate your Chefin account.
       </p>
 
       {/* Status feedback */}

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthLayout } from '../components/auth/AuthLayout';
+import { getErrorMessage } from '../lib/errorMessage';
 import { FormField, inputClass } from '../components/auth/FormField';
 import { PasswordInput } from '../components/auth/PasswordInput';
 import { RolePicker } from '../components/auth/RolePicker';
@@ -70,7 +71,7 @@ export function SignInPage() {
     const { data, error: authError } = await authClient.signIn.email({ email, password });
 
     if (authError) {
-      setError(authError.message || 'Invalid email or password.');
+      setError(getErrorMessage(authError, 'Invalid email or password.'));
       setLoading(false);
       return;
     }
@@ -88,7 +89,7 @@ export function SignInPage() {
     });
     setOtpLoading(false);
     if (otpError) {
-      setError(otpError.message || 'We could not send a sign-in code.');
+      setError(getErrorMessage(otpError, 'We could not send a sign-in code.'));
       return;
     }
     setOtpSent(true);
@@ -100,7 +101,7 @@ export function SignInPage() {
     setOtpLoading(true);
     const { data, error: otpError } = await authClient.signIn.emailOtp({ email, otp });
     if (otpError) {
-      setError(otpError.message || 'That code is invalid or has expired.');
+      setError(getErrorMessage(otpError, 'That code is invalid or has expired.'));
       setOtpLoading(false);
       return;
     }

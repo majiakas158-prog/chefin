@@ -4,6 +4,7 @@ import { AuthLayout } from '../components/auth/AuthLayout';
 import { RolePicker } from '../components/auth/RolePicker';
 import { FormField, inputClass } from '../components/auth/FormField';
 import { useAuth } from '../contexts/AuthContext';
+import { getErrorMessage } from '../lib/errorMessage';
 import { userApi } from '../lib/api';
 
 /**
@@ -49,7 +50,10 @@ export function CompleteProfilePage() {
         setCity(profile.city ?? '');
       }
       setLoading(false);
-    }).catch(() => setLoading(false));
+    }).catch((err) => {
+      setError(getErrorMessage(err, 'We could not load your profile. You can still complete it below.'));
+      setLoading(false);
+    });
   }, [user, navigate]);
 
   const submit = async (event) => {
@@ -80,7 +84,7 @@ export function CompleteProfilePage() {
         { replace: true },
       );
     } catch (err) {
-      setError(err.response?.data?.error?.message ?? 'Failed to save profile.');
+      setError(getErrorMessage(err, 'We could not save your profile. Please try again.'));
       setSaving(false);
     }
   };
@@ -98,7 +102,7 @@ export function CompleteProfilePage() {
       <h2 className="text-3xl font-bold">One more step! 🎉</h2>
       <p className="mt-2 text-slate-500">
         Hi <strong>{user?.name}</strong>! Tell us a bit about yourself so we can
-        personalise your CheafIn experience.
+        personalise your Chefin experience.
       </p>
 
       <h4 className="mt-7 font-semibold">I am a…</h4>
@@ -166,7 +170,7 @@ export function CompleteProfilePage() {
         )}
 
         {error && (
-          <p className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">{error}</p>
+          <p role="alert" className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">{error}</p>
         )}
 
         <button

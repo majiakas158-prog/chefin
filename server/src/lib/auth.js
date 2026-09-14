@@ -22,7 +22,7 @@ export const auth = betterAuth({
         if (type !== 'sign-in') return;
         await sendEmail({
           to: email,
-          subject: 'Your CheafIn sign-in code',
+          subject: 'Your Chefin sign-in code',
           html: emailTemplate({
             heading: 'Your sign-in code',
             body: `Use this code to sign in: <strong style="font-size:28px;letter-spacing:6px">${otp}</strong><br><br>This code expires in 5 minutes.`,
@@ -40,10 +40,10 @@ export const auth = betterAuth({
     sendResetPassword: async ({ user, url }) => {
       await sendEmail({
         to: user.email,
-        subject: 'Reset your CheafIn password',
+        subject: 'Reset your Chefin password',
         html: emailTemplate({
           heading: 'Reset your password',
-          body:    `Hi ${user.name ?? 'there'},<br><br>We received a request to reset your CheafIn password. Click the button below to choose a new one. This link expires in 1 hour.`,
+          body:    `Hi ${user.name ?? 'there'},<br><br>We received a request to reset your Chefin password. Click the button below to choose a new one. This link expires in 1 hour.`,
           ctaLabel: 'Reset Password',
           ctaUrl:   url,
         }),
@@ -59,10 +59,10 @@ export const auth = betterAuth({
     sendVerificationEmail: async ({ user, url }) => {
       await sendEmail({
         to: user.email,
-        subject: 'Verify your CheafIn email',
+        subject: 'Verify your Chefin email',
         html: emailTemplate({
           heading: 'Almost there! Verify your email',
-          body:    `Hi ${user.name ?? 'there'},<br><br>Thanks for joining CheafIn! Click the button below to verify your email address and activate your account.`,
+          body:    `Hi ${user.name ?? 'there'},<br><br>Thanks for joining Chefin! Click the button below to verify your email address and activate your account.`,
           ctaLabel: 'Verify Email',
           ctaUrl:   url,
         }),

@@ -1,4 +1,4 @@
-CheafIn — Chef Signup Flow: Build Plan
+Chefin — Chef Signup Flow: Build Plan
 Reference design: split-screen chef registration page (image hero left, multi-step form right, orange/navy brand palette).
 1. Scope
 Build a 3-step "Create your Chef account" flow:

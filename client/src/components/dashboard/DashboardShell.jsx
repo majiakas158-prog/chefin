@@ -6,7 +6,7 @@ export function DashboardShell({ data, active, setActive, children }) {
   const { signOut } = useAuth();
   return <div className="min-h-screen bg-slate-50 md:flex">
     <aside className="hidden w-64 shrink-0 flex-col bg-slate-900 p-5 text-white md:fixed md:inset-y-0 md:flex">
-      <Link to="/" className="mb-10 flex items-center gap-2 text-xl font-bold"><img className="h-10 w-10 object-contain" src={assets.logo} alt="CheafIn"/>CheafIn</Link>
+      <Link to="/" className="mb-10 flex items-center gap-2 text-xl font-bold"><img className="h-10 w-10 object-contain" src={assets.logo} alt="Chefin"/>Chefin</Link>
       <p className="mb-3 px-3 text-xs font-semibold uppercase tracking-wider text-slate-500">{data.role} workspace</p>
       <nav className="space-y-1">{data.navigation.map(item => <button onClick={() => setActive(item.key)} className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left text-sm font-medium transition ${active === item.key ? 'bg-brand-500 text-white shadow-lg shadow-orange-950/30' : 'text-slate-300 hover:bg-white/10 hover:text-white'}`} key={item.key}><span>{item.icon}</span>{item.label}</button>)}</nav>
       <button onClick={signOut} className="mt-auto flex items-center gap-3 rounded-xl px-3 py-3 text-sm text-slate-400 hover:bg-white/10 hover:text-white">↪ Sign out</button>
