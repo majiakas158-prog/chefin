@@ -10,7 +10,7 @@
 |----------|-----------------------------------------|
 | Client   | React 19, Vite, Tailwind CSS v4, Axios  |
 | Server   | Node.js, Express 4, better-auth         |
-| Database | SQLite (Prisma ORM)                     |
+| Database | Neon PostgreSQL (Prisma ORM)            |
 | Auth     | [better-auth](https://better-auth.com) (session cookies) |
 
 ---
@@ -66,7 +66,8 @@ Edit `server/.env`:
 ```env
 PORT=4000
 NODE_ENV=development
-DATABASE_URL="file:./prisma/dev.db"
+# Copy this from Neon Dashboard -> Project -> Connect (pooled connection string).
+DATABASE_URL="postgresql://USER:PASSWORD@ep-YOUR-ENDPOINT-pooler.REGION.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 BETTER_AUTH_SECRET="replace-with-a-random-32-character-secret"
 BETTER_AUTH_URL="http://localhost:4000"
 FRONTEND_URL="http://localhost:5173"
@@ -76,9 +77,14 @@ FRONTEND_URL="http://localhost:5173"
 
 ```bash
 cd server
-npm run prisma:migrate      # run migrations
+npx prisma migrate deploy   # apply migrations to Neon
 npm run prisma:generate     # generate Prisma client
 ```
+
+In `server/.env`, replace `DATABASE_URL` with the pooled connection string
+from Neon. Do not commit that URL: it includes database credentials. After
+changing databases, stop any running API process before generating Prisma
+Client, then restart it once the commands above complete.
 
 ### 4 — Run both servers
 

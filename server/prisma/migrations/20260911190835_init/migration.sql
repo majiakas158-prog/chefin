@@ -5,17 +5,17 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "emailVerified" BOOLEAN NOT NULL DEFAULT false,
     "image" TEXT,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL
 );
 
 -- CreateTable
 CREATE TABLE "Session" (
     "id" TEXT NOT NULL PRIMARY KEY,
-    "expiresAt" DATETIME NOT NULL,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
     "token" TEXT NOT NULL,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     "ipAddress" TEXT,
     "userAgent" TEXT,
     "userId" TEXT NOT NULL,
@@ -31,12 +31,12 @@ CREATE TABLE "Account" (
     "accessToken" TEXT,
     "refreshToken" TEXT,
     "idToken" TEXT,
-    "accessTokenExpiresAt" DATETIME,
-    "refreshTokenExpiresAt" DATETIME,
+    "accessTokenExpiresAt" TIMESTAMP(3),
+    "refreshTokenExpiresAt" TIMESTAMP(3),
     "scope" TEXT,
     "password" TEXT,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -45,9 +45,9 @@ CREATE TABLE "Verification" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "identifier" TEXT NOT NULL,
     "value" TEXT NOT NULL,
-    "expiresAt" DATETIME NOT NULL,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL
 );
 
 -- CreateTable
@@ -74,8 +74,8 @@ CREATE TABLE "Job" (
     "salary" INTEGER NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'ACTIVE',
     "postedById" TEXT NOT NULL,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
     CONSTRAINT "Job_postedById_fkey" FOREIGN KEY ("postedById") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -85,7 +85,7 @@ CREATE TABLE "Application" (
     "jobId" TEXT NOT NULL,
     "chefId" TEXT NOT NULL,
     "status" TEXT NOT NULL DEFAULT 'APPLIED',
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "Application_jobId_fkey" FOREIGN KEY ("jobId") REFERENCES "Job" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "Application_chefId_fkey" FOREIGN KEY ("chefId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );

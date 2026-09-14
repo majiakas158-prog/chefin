@@ -9,7 +9,7 @@ export const auth = betterAuth({
   baseURL: env.BETTER_AUTH_URL,
   secret: env.BETTER_AUTH_SECRET,
   trustedOrigins: [env.FRONTEND_URL],
-  database: prismaAdapter(prisma, { provider: 'sqlite' }),
+  database: prismaAdapter(prisma, { provider: 'postgresql' }),
   plugins: [
     emailOTP({
       // Existing accounts only: an OTP must never create an unprofiled user.
