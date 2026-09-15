@@ -40,7 +40,7 @@ export function AuthProvider({ children }) {
   }, [navigate]);
 
   const resendVerification = useCallback(async (email) => {
-    const { error } = await authClient.sendVerificationEmail({ email, callbackURL: '/signin' });
+    const { error } = await authClient.sendVerificationEmail({ email, callbackURL: '/session-redirect' });
     return error ?? null;
   }, []);
 

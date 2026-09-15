@@ -2,3 +2,14 @@
 
 @theme { --color-brand-50:#fff7f2; --color-brand-100:#ffe6db; --color-brand-500:#ff6b35; --color-brand-600:#e85a27; --font-sans:"Poppins",ui-sans-serif,system-ui,sans-serif; }
 @layer base { html { scroll-behavior:smooth; } body { @apply m-0 min-w-80 bg-slate-50 font-sans text-slate-800; } button,input,textarea,select { font:inherit; } button { cursor:pointer; } button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible { outline:3px solid #ffb703; outline-offset:2px; } }
+
+@keyframes profile-progress { from { width: 0; } }
+.dashboard-progress { animation: profile-progress 900ms ease-out both; }
+.interactive { transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease; }
+.interactive:active { transform: scale(.98); }
+.dashboard-modal { animation: modal-in 240ms ease-out both; }
+.dashboard-toast { animation: toast-in 220ms ease-out both; }
+@keyframes modal-in { from { opacity: 0; transform: scale(.94) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+@keyframes toast-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 639px) { .dashboard-modal { animation-name: sheet-in; } .dashboard-toast { bottom: 5rem; left: 1rem; right: 1rem; } }
+@keyframes sheet-in { from { opacity: 0; transform: translateY(100%); } to { opacity: 1; transform: translateY(0); } }

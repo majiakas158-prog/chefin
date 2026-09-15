@@ -12,7 +12,7 @@ app.use('/api/auth',authRouter);
 app.use(express.json({limit:'100kb'}));
 // Better Auth falls back to the API root when an old verification link has no
 // callback URL. Send the user to the client instead of returning "Cannot GET /".
-app.get('/',(req,res)=>res.redirect(new URL('/signin',env.FRONTEND_URL).toString()));
+app.get('/',(req,res)=>res.redirect(new URL('/session-redirect',env.FRONTEND_URL).toString()));
 app.get('/health',(req,res)=>res.json({status:'ok'}));
 app.use('/api',apiRateLimiter,apiRouter);
 app.use(errorHandler);

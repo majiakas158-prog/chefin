@@ -71,7 +71,7 @@ export function SignUpPage() {
       password,
       name: JSON.stringify(profilePayload),
       // Better Auth uses this after the recipient clicks the verification link.
-      callbackURL: '/signin',
+      callbackURL: '/session-redirect',
     });
 
     if (authError) {
